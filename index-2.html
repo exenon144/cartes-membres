@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<title>Église Liloba na Nzambe – Cartes de membre</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{--bg:#f3f7fc;--card:#fff;--ink:#14253d;--blue:#1b5cb8;--pale:#dce8f8;--line:#c5d4ea}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.5}
+header{background:var(--blue);color:#fff;padding:18px 16px;text-align:center}
+header h1{margin:0;font-size:1.3rem}header p{margin:2px 0 0;opacity:.85;font-size:.9rem}
+nav{display:flex;gap:8px;justify-content:center;padding:12px}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 16px;border-radius:999px;font:inherit;cursor:pointer}
+nav button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+main{max-width:640px;margin:0 auto;padding:0 14px 40px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+h2{margin-top:0}
+label{display:block;font-weight:700;margin:12px 0 4px}
+input[type=text],input[type=tel],input[type=email],input[type=password]{width:100%;padding:11px;border:1px solid var(--line);border-radius:8px;font:inherit;background:var(--bg);color:var(--ink)}
+.go{margin-top:16px;width:100%;padding:12px;border:0;border-radius:10px;background:var(--blue);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.go:disabled{opacity:.5}
+.msg{margin-top:12px;padding:10px;border-radius:8px;background:var(--pale)}
+#preview{width:90px;height:110px;object-fit:cover;border-radius:8px;border:1px dashed var(--blue);display:none;margin-top:8px}
+.row{border-top:1px solid var(--line);padding:12px 0;display:flex;gap:10px;align-items:center}
+.row img{width:46px;height:56px;object-fit:cover;border-radius:6px;background:var(--pale)}
+.row .info{flex:1;min-width:0;word-break:break-word}.row small{color:var(--blue)}
+.row button,.sm{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 10px;border-radius:8px;font:inherit;cursor:pointer;margin:2px}
+.hide{display:none}
+#sheet{display:none}
+.carte{width:85.6mm;height:54mm;border:1px solid #1b5cb8;border-radius:3mm;padding:3mm;margin:0 0 4mm;font-size:8pt;color:#14253d;background:#fff;page-break-inside:avoid;overflow:hidden}
+.carte h2{margin:0 0 2mm;background:#1b5cb8;color:#fff;font-size:9pt;text-align:center;padding:1.5mm;border-radius:2mm}
+.carte .f{display:flex;gap:3mm}.carte img.ph{width:22mm;height:28mm;object-fit:cover;border:1px solid #1b5cb8}
+.carte p{margin:.8mm 0}.carte .ft{margin-top:2mm;font-size:7pt;text-align:center;color:#1b5cb8}
+.carte .bl{font-size:7pt;margin:0 0 1.5mm;line-height:1.25}.carte .rw{display:flex;gap:3mm;align-items:flex-end}.carte .sg{flex:1;text-align:center;font-size:6.5pt}.carte .zone{height:12mm;border-bottom:1px solid #14253d;display:flex;align-items:flex-end;justify-content:center}.carte .zone img{max-height:12mm;max-width:100%}
+@media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}body *{visibility:hidden}#sheet,#sheet *{visibility:visible}#sheet{display:block;position:absolute;left:0;top:0}}
+</style>
+</head>
+<body>
+<header><h1>Église Liloba na Nzambe</h1><p>Cellule de Zongo 1 – Inscription des membres</p></header>
+<nav><button id="t1" class="on">Inscription</button><button id="t2">Administration</button></nav>
+<main>
+
+<section id="v1" class="panel">
+<h2>Remplir ma fiche de membre</h2>
+<label for="nom">Nom</label><input type="text" id="nom" autocomplete="family-name">
+<label for="post">Post-nom</label><input type="text" id="post">
+<label for="pre">Prénom</label><input type="text" id="pre" autocomplete="given-name">
+<label for="adr">Adresse</label><input type="text" id="adr" autocomplete="street-address">
+<label for="tel">Téléphone</label><input type="tel" id="tel" autocomplete="tel">
+<label for="pho">Photo (portrait)</label><input type="file" id="pho" accept="image/*"><img id="preview" alt="Aperçu">
+<button class="go" id="send">Envoyer ma fiche</button>
+<div class="msg" id="m1">Remplissez la fiche puis envoyez-la.</div>
+</section>
+
+<section id="v2" class="panel hide">
+<div id="login">
+<h2>Connexion administrateur</h2>
+<label for="em">E-mail</label><input type="email" id="em" autocomplete="username">
+<label for="pw">Mot de passe</label><input type="password" id="pw" autocomplete="current-password">
+<button class="go" id="logBtn">Se connecter</button>
+<div class="msg hide" id="m2"></div>
+</div>
+<div id="admin" class="hide">
+<h2>Fiches reçues</h2>
+<label for="sigf">Signature / cachet du responsable (image, facultatif)</label>
+<input type="file" id="sigf" accept="image/*"> <button class="sm" id="sigx">Retirer</button>
+<div class="msg" id="sigm">Aucune signature enregistrée : la zone restera vide pour signer à la main.</div>
+<button class="go" id="printAll" style="margin:0 0 8px">Imprimer toutes les cartes validées</button>
+<button class="sm" id="refresh">Actualiser</button> <button class="sm" id="logout">Déconnexion</button>
+<div id="list"></div>
+</div>
+</section>
+</main>
+<div id="sheet"></div>
+
+<script>
+const SUPABASE_URL="https://widzzaaudvhsadbilrnp.supabase.co";
+const SUPABASE_KEY="sb_publishable_f0Lg3GchcLio8R2b4vyBXg_5qTfV--H";
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+let photo="",items=[];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function show(n){$("v1").classList.toggle("hide",n!==1);$("v2").classList.toggle("hide",n!==2);$("t1").classList.toggle("on",n===1);$("t2").classList.toggle("on",n===2)}
+$("t1").onclick=()=>show(1);$("t2").onclick=()=>show(2);
+
+$("pho").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement("canvas");c.width=240;c.height=300;const x=c.getContext("2d");const s=Math.max(240/im.width,300/im.height);const w=im.width*s,h=im.height*s;x.drawImage(im,(240-w)/2,(300-h)/2,w,h);photo=c.toDataURL("image/jpeg",.8);$("preview").src=photo;$("preview").style.display="block"};im.src=r.result};r.readAsDataURL(f)};
+
+$("send").onclick=async()=>{
+  const d={nom:$("nom").value.trim(),postnom:$("post").value.trim(),prenom:$("pre").value.trim(),adresse:$("adr").value.trim(),telephone:$("tel").value.trim(),photo:photo,statut:"attente"};
+  if(!d.nom||!d.prenom||!d.telephone){$("m1").textContent="Remplissez au minimum le nom, le prénom et le téléphone.";return}
+  $("send").disabled=true;$("m1").textContent="Envoi en cours…";
+  const {error}=await sb.from("membres").insert(d);
+  $("send").disabled=false;
+  if(error){$("m1").textContent="Envoi impossible. Vérifiez votre connexion et réessayez.";return}
+  $("m1").textContent="Fiche envoyée. Le secrétaire va la valider.";
+  ["nom","post","pre","adr","tel"].forEach(i=>$(i).value="");photo="";$("preview").style.display="none";$("pho").value="";
+};
+
+function setAdmin(on){$("login").classList.toggle("hide",on);$("admin").classList.toggle("hide",!on)}
+$("logBtn").onclick=async()=>{
+  const {error}=await sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value});
+  if(error){$("m2").classList.remove("hide");$("m2").textContent="E-mail ou mot de passe incorrect.";return}
+  $("pw").value="";$("m2").classList.add("hide");setAdmin(true);load();
+};
+$("logout").onclick=async()=>{await sb.auth.signOut();items=[];setAdmin(false)};
+$("refresh").onclick=()=>load();
+
+async function load(){
+  const {data,error}=await sb.from("membres").select("*").order("created_at",{ascending:false});
+  if(error){$("list").innerHTML="<p>Lecture impossible. Reconnectez-vous.</p>";return}
+  items=data;render();
+}
+function render(){
+  if(!items.length){$("list").innerHTML="<p>Aucune fiche pour l'instant.</p>";return}
+  $("list").innerHTML=items.map(m=>`<div class="row"><img src="${esc(m.photo)}" alt=""><div class="info"><strong>${esc(m.nom)} ${esc(m.postnom)} ${esc(m.prenom)}</strong><br><small>${m.statut==="valide"?esc(m.numero):"En attente"}</small> · ${esc(m.telephone)}</div><div>${m.statut==="valide"?`<button data-p="${esc(m.id)}">Carte</button>`:`<button data-v="${esc(m.id)}">Valider</button>`}<button data-d="${esc(m.id)}">Supprimer</button></div></div>`).join("");
+}
+function nextNumber(){
+  const y=new Date().getFullYear();
+  const max=items.reduce((a,m)=>{const n=parseInt(String(m.numero||"").split("-").pop(),10);return isNaN(n)?a:Math.max(a,n)},0);
+  return "ELNZ-"+y+"-"+String(max+1).padStart(5,"0");
+}
+$("list").onclick=async e=>{
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.v){const {error}=await sb.from("membres").update({statut:"valide",numero:nextNumber()}).eq("id",b.dataset.v);if(error)alert("Validation impossible.");else load()}
+  if(b.dataset.d&&confirm("Supprimer cette fiche ?")){const {error}=await sb.from("membres").delete().eq("id",b.dataset.d);if(error)alert("Suppression impossible.");else load()}
+  if(b.dataset.p)printCards(items.filter(m=>m.id===b.dataset.p));
+};
+$("printAll").onclick=()=>{const v=items.filter(m=>m.statut==="valide");if(!v.length){alert("Aucune carte validée.");return}printCards(v)};
+
+function fdate(s){return s?new Date(s).toLocaleDateString("fr-FR"):""}
+function printCards(list){
+  let sig="";try{sig=localStorage.getItem("sigResp")||""}catch(e){}
+  $("sheet").innerHTML=list.map(m=>`
+  <div class="carte"><h2>ÉGLISE LILOBA NA NZAMBE</h2><div class="f"><img class="ph" src="${esc(m.photo)}" alt=""><div>
+  <p><b>Nom :</b> ${esc(m.nom)}</p><p><b>Post-nom :</b> ${esc(m.postnom)}</p><p><b>Prénom :</b> ${esc(m.prenom)}</p><p><b>Adresse :</b> ${esc(m.adresse)}</p><p><b>Tél :</b> ${esc(m.telephone)}</p><p><b>Adhésion :</b> ${fdate(m.created_at)}</p></div></div>
+  <div class="ft">Membre actif · N° ${esc(m.numero)} · Cellule : ZONGO 1</div></div>
+  <div class="carte"><h2>INFORMATIONS &amp; VALIDITÉ</h2>
+  <p class="bl">• Être membre engagé de la cellule Zongo 1<br>• Respecter les valeurs et directives de l'église<br>• Participer activement aux activités communautaires</p>
+  <div class="rw"><div class="sg"><div class="zone"></div>Signature du membre</div>
+  <div class="sg"><div class="zone">${sig?`<img src="${sig}" alt="">`:""}</div>Signature &amp; cachet du responsable</div></div>
+  <div class="ft">Délivré le ${fdate(new Date())} · CONTACT – Église Liloba na Nzambe</div></div>`).join("");
+  window.print();
+}
+
+function sigState(){let v="";try{v=localStorage.getItem("sigResp")||""}catch(e){}$("sigm").textContent=v?"Signature enregistrée : elle sera imprimée sur chaque carte.":"Aucune signature enregistrée : la zone restera vide pour signer à la main."}
+$("sigf").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,300/im.width);const c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);try{localStorage.setItem("sigResp",c.toDataURL("image/png"))}catch(x){alert("Enregistrement impossible.")}sigState()};im.src=r.result};r.readAsDataURL(f)};
+$("sigx").onclick=()=>{try{localStorage.removeItem("sigResp")}catch(e){}$("sigf").value="";sigState()};
+sigState();
+sb.auth.getSession().then(({data})=>{if(data.session){setAdmin(true);load()}});
+</script>
+</body>
+</html>
